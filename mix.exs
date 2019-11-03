@@ -15,18 +15,18 @@ defmodule TeppelinBot.MixProject do
   def application do
     [
       extra_applications: [:logger],
-      mod: {TeppelinBot.Application, []}
+      mod: {TeppelinBot, []}
     ]
   end
 
   # Run "mix help deps" to learn about dependencies.
   defp deps do
     [
-      {:ex_gram, "~> 0.8"},
-      {:maxwell, "~> 2.2.1"},
-      {:tesla, "~> 1.2"},
-      {:hackney, "~> 1.12"},
-      {:jason, ">= 1.0.0"}
+     {:ex_gram, "~> 0.8"},
+     {:tesla, "~> 1.2"},
+     {:hackney, "~> 1.12"},
+     {:gun, "~> 1.3"},
+     {:jason, "~> 1.1"},
     ]
   end
 end

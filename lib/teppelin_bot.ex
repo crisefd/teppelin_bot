@@ -1,18 +1,26 @@
 defmodule TeppelinBot do
-  @moduledoc """
-  Documentation for TeppelinBot.
-  """
+  use Application
+  require Logger
 
-  @doc """
-  Hello world.
+  @bot_token Application.get_env(:teppelin_bot, :token)
 
-  ## Examples
 
-      iex> TeppelinBot.hello()
-      :world
+  def start(_type, _args) do
+    children = [
+       ExGram, 
+      {TeppelinBot.Bot, [method: :polling, token: @bot_token]}
+    ]
 
-  """
-  def hello do
-    :world
+    opts = [strategy: :one_for_one, name: TeppelinBot.Supervisor]
+
+    case Supervisor.start_link(children, opts) do
+      {:ok, _ } = ok ->
+        Logger.info("Starting TeppelinBot")
+        ok
+      error ->
+        Logger.error("Error starting TeppelinBot")
+        error
+    end
   end
+  
 end

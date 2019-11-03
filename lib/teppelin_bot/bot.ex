@@ -1,8 +1,7 @@
 defmodule TeppelinBot.Bot do
   @bot :teppelin_bot
 		
-  use ExGram.Bot,
-  name: @bot
+  use ExGram.Bot, name: @bot
 
   middleware(ExGram.Middleware.IgnoreUsername)
 

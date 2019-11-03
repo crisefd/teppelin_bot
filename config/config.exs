@@ -1,8 +1,8 @@
 
 use Mix.Config
 
-# config :ex_gram, adapter: ExGram.Adapter.Maxwell
-# config :maxwell, default_adapter: Maxwell.Adapter.Hackney
+
+config :tesla, adapter: Tesla.Adapter.Gun
 
 config :teppelin_bot,
 			  twitch_base_url: "https://api.twitch.tv/helix",
