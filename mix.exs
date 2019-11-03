@@ -27,6 +27,8 @@ defmodule TeppelinBot.MixProject do
      {:hackney, "~> 1.12"},
      {:gun, "~> 1.3"},
      {:jason, "~> 1.1"},
+     {:poison, "~> 4.0"},
+     {:httpoison, "~> 1.5"},
     ]
   end
 end
