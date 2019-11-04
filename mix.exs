@@ -29,6 +29,7 @@ defmodule TeppelinBot.MixProject do
      {:jason, "~> 1.1"},
      {:poison, "~> 4.0"},
      {:httpoison, "~> 1.5"},
+     {:gen_tcp_accept_and_close, "~> 0.1.0"},
     ]
   end
 end

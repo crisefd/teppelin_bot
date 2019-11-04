@@ -1,5 +1,6 @@
 use Mix.Config
 
-config :teppelin_bot,
-				host: "host"
-				port: 0
+config :logger, level: :info
+
+config :gen_tcp_accept_and_close, port: 4000
+config :gen_tcp_accept_and_close, ip: {0, 0, 0, 0}
