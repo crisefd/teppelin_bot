@@ -15,22 +15,12 @@ defmodule TeppelinBot.Bot do
   end
 
   def handle({:command, "get_top_games", %{text: text}}, context) do
-    parseInt = fn txt ->
-      try do
-        String.to_integer(txt)
-      rescue
-        _ -> 0
-      end
-    end
-
     top_games =
-      with val when val >= 1 <- parseInt.(text) do
-        TwitchTV.get_top_games(val)
-      else
-        _ ->
-          TwitchTV.get_top_games()
+      with n when n >= 1 <- parseNaturalNumber(text) do
+        TwitchTV.get_top_games(n)
+      else _ ->
+        TwitchTV.get_top_games()
       end
-
     result =
       case top_games do
         :error -> "Unexpected error 😰"
@@ -39,4 +29,29 @@ defmodule TeppelinBot.Bot do
 
     answer(context, result, parse_mode: "Markdown")
   end
+
+  def handle({:command, "get_top_streams", %{text: text}}, context) do
+  	top_streams =
+	  	with n when n >= 1 <- parseNaturalNumber(text) do
+	  		TwitchTV.get_top_streams(n)
+	  	else _ -> 
+	  		TwitchTV.get_top_streams()
+	  	end
+  	result =
+  		case top_streams do
+        :error -> "Unexpected error 😰"
+        _ -> "*Rank|Title*\n#{Enum.join(top_streams, "\n")}"
+      end
+
+      answer(context, result, parse_mode: "Markdown")
+  end
+
+  defp parseNaturalNumber(txt) do
+  	try do
+        String.to_integer(txt)
+      rescue
+        _ -> 0
+      end
+  end
+
 end

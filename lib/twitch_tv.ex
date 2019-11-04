@@ -3,36 +3,57 @@ defmodule TeppelinBot.TwitchTV do
 
   @base_url Application.get_env(:teppelin_bot, :twitch_base_url)
   @client_id Application.get_env(:teppelin_bot, :twitch_client_id)
+  @headers ["Client-ID": @client_id, "User-Agent": "Teppelin Bot"]
 
   def get_top_games(first \\ 10) do
     full_url = "#{@base_url}/games/top?first=#{first}"
-    headers = ["Client-ID": @client_id, "User-Agent": "Teppelin Bot"]
-
     result =
-      with {:ok, data} <- get(full_url, headers) do
+      with {:ok, data} <- get(full_url, @headers) do
         data
         |> Enum.with_index()
         |> Enum.map(fn {item, index} ->
           n = Integer.to_string(index + 1)
           name = item[:name]
           rank = String.pad_trailing(n, 8 - String.length(n))
-
-          final_name =
-            if String.length(name) < 18 do
-              name
-            else
-              name |> String.slice(0, 18) |> String.pad_trailing(3, ".")
-            end
-
-          "#{rank} | #{final_name}"
+          title = process_name(name)
+          "#{rank} | #{title}"
         end)
       else
         {:error, error} ->
-          Logger.error("error at get_top_games. #{inspect(error)}")
+          Logger.error("error at TeppelinBot.TwitchTV.get_top_games. #{inspect(error)}")
           :error
       end
-
     result
+  end
+
+  def get_top_streams(first \\ 10) do
+    full_url = "#{@base_url}/streams?first=#{first}"
+    result =
+      with {:ok, data} <- get(full_url, @headers) do
+          data
+          |> Enum.with_index()
+          |> Enum.map(fn {item, index} ->
+             n = Integer.to_string(index + 1)
+             rank = String.pad_trailing(n, 8 - String.length(n))
+             name = item[:title]
+             url = "https://twitch.tv/#{item[:user_name]}"
+             title = process_name(name)
+             "#{rank} | [#{title}](#{url})"
+          end)
+        else
+          {:error, error} ->
+            Logger.error("error at TeppelinBot.TwitchTV.get_top_streams. #{inspect(error)}")
+            :error
+      end
+    result
+  end
+
+  defp process_name(name, limit \\ 18) do
+    cond do
+      is_nil(name) -> ""
+      String.length(name) < limit -> name
+      true ->  name |> String.slice(0, limit) |> String.pad_trailing(3, ".")
+    end
   end
 
   defp get(url, headers) do
